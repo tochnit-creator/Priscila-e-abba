@@ -1,0 +1,786 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Relatório Técnico — Ministério Abba One</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0b0e14;
+    --bg2: #111520;
+    --bg3: #161b27;
+    --surface: #1a2030;
+    --surface2: #202636;
+    --border: rgba(255,255,255,0.07);
+    --border2: rgba(255,255,255,0.12);
+    --text: #eef0f5;
+    --text2: #8b93a8;
+    --text3: #5a6173;
+    --gold: #c9a84c;
+    --gold2: #e8c97a;
+    --gold-dim: rgba(201,168,76,0.12);
+    --gold-glow: rgba(201,168,76,0.25);
+    --teal: #3ecfb2;
+    --teal-dim: rgba(62,207,178,0.1);
+    --blue: #5b9cf6;
+    --blue-dim: rgba(91,156,246,0.1);
+    --rose: #f0657a;
+    --rose-dim: rgba(240,101,122,0.1);
+    --amber: #f0a050;
+    --amber-dim: rgba(240,160,80,0.1);
+    --purple: #a78bfa;
+    --purple-dim: rgba(167,139,250,0.1);
+    --r: 12px;
+    --r-lg: 18px;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 15px;
+    line-height: 1.7;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* ── Background ambience ── */
+  body::before {
+    content: '';
+    position: fixed;
+    top: -200px; left: -200px;
+    width: 700px; height: 700px;
+    background: radial-gradient(circle, rgba(201,168,76,0.06) 0%, transparent 65%);
+    pointer-events: none;
+    z-index: 0;
+  }
+  body::after {
+    content: '';
+    position: fixed;
+    bottom: -200px; right: -150px;
+    width: 600px; height: 600px;
+    background: radial-gradient(circle, rgba(62,207,178,0.05) 0%, transparent 65%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* ── Layout ── */
+  .layout { display: flex; min-height: 100vh; position: relative; z-index: 1; }
+
+  /* ── Sidebar ── */
+  .sidebar {
+    width: 240px;
+    flex-shrink: 0;
+    background: var(--bg2);
+    border-right: 1px solid var(--border);
+    padding: 2rem 0;
+    position: fixed;
+    top: 0; left: 0; bottom: 0;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .sidebar-logo {
+    padding: 0 1.5rem 2rem;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 1.5rem;
+  }
+  .sidebar-logo .eyebrow {
+    font-size: 10px;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: var(--gold);
+    font-weight: 500;
+    margin-bottom: 4px;
+  }
+  .sidebar-logo h1 {
+    font-family: 'DM Serif Display', serif;
+    font-size: 17px;
+    line-height: 1.3;
+    color: var(--text);
+  }
+  .sidebar-logo p {
+    font-size: 12px;
+    color: var(--text3);
+    margin-top: 4px;
+  }
+
+  .nav-group-label {
+    font-size: 10px;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: var(--text3);
+    font-weight: 500;
+    padding: 0 1.5rem;
+    margin-bottom: .5rem;
+  }
+  .nav-group { margin-bottom: 1.5rem; }
+
+  .nav-btn {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    padding: 9px 1.5rem;
+    background: none;
+    border: none;
+    color: var(--text2);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    cursor: pointer;
+    text-align: left;
+    transition: all .18s;
+    position: relative;
+  }
+  .nav-btn .icon { font-size: 18px; opacity: .7; }
+  .nav-btn:hover { color: var(--text); background: var(--surface); }
+  .nav-btn.active {
+    color: var(--gold2);
+    background: var(--gold-dim);
+  }
+  .nav-btn.active::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 50%;
+    transform: translateY(-50%);
+    width: 3px; height: 60%;
+    background: var(--gold);
+    border-radius: 0 3px 3px 0;
+  }
+
+  .sidebar-footer {
+    margin-top: auto;
+    padding: 1.5rem;
+    border-top: 1px solid var(--border);
+    font-size: 12px;
+    color: var(--text3);
+    line-height: 1.5;
+  }
+  .sidebar-footer strong { color: var(--text2); font-weight: 500; }
+
+  /* ── Main ── */
+  .main {
+    margin-left: 240px;
+    flex: 1;
+    padding: 2.5rem 3rem;
+    max-width: 960px;
+  }
+
+  /* ── Page header ── */
+  .page-header {
+    margin-bottom: 2.5rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid var(--border);
+  }
+  .page-header .eyebrow {
+    font-size: 11px;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: var(--gold);
+    font-weight: 500;
+    margin-bottom: 6px;
+  }
+  .page-header h2 {
+    font-family: 'DM Serif Display', serif;
+    font-size: 32px;
+    font-weight: 400;
+    color: var(--text);
+    line-height: 1.2;
+  }
+  .page-header p {
+    margin-top: 8px;
+    color: var(--text2);
+    font-size: 14px;
+    max-width: 520px;
+  }
+
+  /* ── Sections ── */
+  .section { display: none; animation: fadeIn .25s ease; }
+  .section.active { display: block; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+  /* ── Grid ── */
+  .grid2 { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 14px; margin-bottom: 2rem; }
+  .grid3 { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 14px; margin-bottom: 2rem; }
+
+  /* ── Cards ── */
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--r-lg);
+    padding: 1.25rem 1.4rem;
+    transition: border-color .2s, background .2s;
+  }
+  .card:hover { border-color: var(--border2); background: var(--surface2); }
+
+  .card-icon {
+    width: 36px; height: 36px;
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px;
+    margin-bottom: 12px;
+  }
+  .card-title { font-size: 13px; font-weight: 600; color: var(--text); margin-bottom: 6px; }
+  .card-body { font-size: 13px; color: var(--text2); line-height: 1.65; }
+
+  /* ── Section label ── */
+  .section-label {
+    font-size: 11px;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: var(--text3);
+    font-weight: 500;
+    margin: 2rem 0 1rem;
+  }
+  .section-label:first-child { margin-top: 0; }
+
+  /* ── Highlight box ── */
+  .highlight {
+    background: var(--gold-dim);
+    border: 1px solid rgba(201,168,76,0.2);
+    border-left: 3px solid var(--gold);
+    border-radius: 0 var(--r) var(--r) 0;
+    padding: 12px 16px;
+    font-size: 13px;
+    color: var(--text2);
+    line-height: 1.65;
+    margin: 14px 0;
+  }
+
+  /* ── Tip rows ── */
+  .tip-row {
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+    padding: 14px 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .tip-row:last-child { border-bottom: none; }
+  .tip-icon {
+    width: 36px; height: 36px;
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+  .tip-content strong { display: block; font-size: 14px; font-weight: 600; color: var(--text); margin-bottom: 3px; }
+  .tip-content span { font-size: 13px; color: var(--text2); line-height: 1.65; }
+
+  /* ── Tags ── */
+  .tag {
+    display: inline-block;
+    font-size: 11px;
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-weight: 500;
+    margin: 2px 2px 2px 0;
+  }
+  .tag-gold { background: var(--gold-dim); color: var(--gold2); border: 1px solid rgba(201,168,76,0.2); }
+  .tag-teal { background: var(--teal-dim); color: var(--teal); border: 1px solid rgba(62,207,178,0.2); }
+  .tag-blue { background: var(--blue-dim); color: var(--blue); border: 1px solid rgba(91,156,246,0.2); }
+  .tag-rose { background: var(--rose-dim); color: var(--rose); border: 1px solid rgba(240,101,122,0.2); }
+  .tag-amber { background: var(--amber-dim); color: var(--amber); border: 1px solid rgba(240,160,80,0.2); }
+  .tag-purple { background: var(--purple-dim); color: var(--purple); border: 1px solid rgba(167,139,250,0.2); }
+
+  /* ── Singer cards ── */
+  .singer-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--r-lg);
+    margin-bottom: 10px;
+    overflow: hidden;
+    transition: border-color .2s;
+  }
+  .singer-card:hover { border-color: var(--border2); }
+  .singer-card.open { border-color: rgba(201,168,76,0.3); }
+
+  .singer-header {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 1.1rem 1.4rem;
+    cursor: pointer;
+    user-select: none;
+  }
+
+  .avatar {
+    width: 46px; height: 46px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'DM Serif Display', serif;
+    font-size: 16px;
+    font-weight: 400;
+    flex-shrink: 0;
+    border: 1px solid transparent;
+  }
+
+  .singer-meta { flex: 1; min-width: 0; }
+  .singer-meta .name { font-size: 15px; font-weight: 600; color: var(--text); }
+  .singer-meta .role { font-size: 12px; color: var(--text3); margin-top: 1px; }
+
+  .singer-tags { display: flex; flex-wrap: wrap; gap: 4px; margin-left: auto; }
+
+  .chevron {
+    color: var(--text3);
+    font-size: 18px;
+    transition: transform .25s;
+    flex-shrink: 0;
+    margin-left: 8px;
+  }
+  .singer-card.open .chevron { transform: rotate(180deg); }
+
+  .singer-body {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height .35s ease;
+  }
+  .singer-card.open .singer-body { max-height: 600px; }
+
+  .singer-body-inner {
+    padding: 0 1.4rem 1.4rem;
+    border-top: 1px solid var(--border);
+    padding-top: 1.1rem;
+    font-size: 13px;
+    color: var(--text2);
+    line-height: 1.7;
+  }
+  .singer-body-inner p + p { margin-top: .75rem; }
+  .tag-row { margin-top: 12px; }
+
+  /* ── Stat cards ── */
+  .stat-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 12px; margin-bottom: 2rem; }
+  .stat-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--r);
+    padding: 1rem 1.1rem;
+  }
+  .stat-card .label { font-size: 11px; color: var(--text3); text-transform: uppercase; letter-spacing: .08em; font-weight: 500; margin-bottom: 6px; }
+  .stat-card .value { font-family: 'DM Serif Display', serif; font-size: 28px; color: var(--text); line-height: 1; }
+  .stat-card .sub { font-size: 12px; color: var(--text3); margin-top: 4px; }
+
+  /* ── Scrollbar ── */
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: var(--bg); }
+  ::-webkit-scrollbar-thumb { background: var(--surface2); border-radius: 3px; }
+
+  /* ── Responsive ── */
+  @media (max-width: 768px) {
+    .sidebar { width: 100%; height: auto; position: relative; border-right: none; border-bottom: 1px solid var(--border); padding: 1rem 0; }
+    .layout { flex-direction: column; }
+    .main { margin-left: 0; padding: 1.5rem; }
+    .nav-btn { padding: 8px 1rem; }
+    .sidebar-logo { padding: 0 1rem 1rem; }
+    .page-header h2 { font-size: 24px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="layout">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <div class="eyebrow">Relatório Técnico</div>
+      <h1>Ministério<br>Abba One</h1>
+      <p>por Priscila Britto</p>
+    </div>
+
+    <div class="nav-group">
+      <div class="nav-group-label">Orientações</div>
+      <button class="nav-btn active" onclick="show('cuidados',this)">
+        <span class="icon">🎙️</span> Cuidados vocais
+      </button>
+    </div>
+
+    <div class="nav-group">
+      <div class="nav-group-label">Prática</div>
+      <button class="nav-btn" onclick="show('ensaio',this)">
+        <span class="icon">🎵</span> Ensaio & arranjo
+      </button>
+      <button class="nav-btn" onclick="show('gravacao',this)">
+        <span class="icon">🎚️</span> Gravação
+      </button>
+    </div>
+
+    <div class="nav-group">
+      <div class="nav-group-label">Time</div>
+      <button class="nav-btn" onclick="show('cantores',this)">
+        <span class="icon">👥</span> Cantores
+      </button>
+      <button class="nav-btn" onclick="show('sugestoes',this)">
+        <span class="icon">💡</span> Sugestões gerais
+      </button>
+    </div>
+
+    <div class="sidebar-footer">
+      <strong>Priscila Britto</strong><br>
+      Consultoria vocal &amp; direção de coro
+    </div>
+  </aside>
+
+  <!-- MAIN CONTENT -->
+  <main class="main">
+
+    <!-- ══ CUIDADOS VOCAIS ══ -->
+    <div id="sec-cuidados" class="section active">
+      <div class="page-header">
+        <div class="eyebrow">Seção 1</div>
+        <h2>Cuidados com a voz</h2>
+        <p>Hábitos e práticas recomendados para saúde vocal e longevidade da voz de cada cantor.</p>
+      </div>
+
+      <div class="stat-grid">
+        <div class="stat-card"><div class="label">Tópicos</div><div class="value">7</div><div class="sub">orientações</div></div>
+        <div class="stat-card"><div class="label">Cantores</div><div class="value">5</div><div class="sub">no grupo</div></div>
+        <div class="stat-card"><div class="label">Naipes</div><div class="value">3</div><div class="sub">a organizar</div></div>
+        <div class="stat-card"><div class="label">Prioridade</div><div class="value" style="font-size:20px;padding-top:4px;color:var(--gold)">Alta</div><div class="sub">pré-gravação</div></div>
+      </div>
+
+      <div class="grid2">
+        <div class="card">
+          <div class="card-icon" style="background:var(--blue-dim); color:var(--blue)">💧</div>
+          <div class="card-title">Hidratação</div>
+          <div class="card-body">Água ao longo de todo o dia. Antes do ensaio: água de coco ou solução reidratante. Nebulização com soro fisiológico é recomendada, especialmente em dias de gravação.</div>
+        </div>
+        <div class="card">
+          <div class="card-icon" style="background:var(--gold-dim); color:var(--gold2)">💪</div>
+          <div class="card-title">Fortalecimento</div>
+          <div class="card-body">Exercícios diários de fortalecimento e resistência muscular evitam fadiga, rouquidão e lesões, proporcionando uma voz mais presente com menos esforço. Exercícios de referência serão enviados.</div>
+        </div>
+        <div class="card">
+          <div class="card-icon" style="background:var(--teal-dim); color:var(--teal)">🔥</div>
+          <div class="card-title">Aquecimento & desaquecimento</div>
+          <div class="card-body">Obrigatório antes e depois de ensaios, gravações e apresentações. A professora enviará vídeos e lista de exercícios recomendados para cada momento.</div>
+        </div>
+        <div class="card">
+          <div class="card-icon" style="background:var(--amber-dim); color:var(--amber)">🥗</div>
+          <div class="card-title">Alimentação & refluxo</div>
+          <div class="card-body">Evitar longos períodos sem comer e exageros antes de cantar. Quem tem refluxo: dormir só 3h após a última refeição. O refluxo corrói as pregas vocais — sinais: pigarro constante, garganta seca, rouquidão.</div>
+        </div>
+        <div class="card">
+          <div class="card-icon" style="background:var(--purple-dim); color:var(--purple)">🫁</div>
+          <div class="card-title">Alergias & vias respiratórias</div>
+          <div class="card-body">Rinite, sinusite, faringite ou laringite: manter nebulização e fazer lavagem nasal regularmente. Secreção nasal cobre as pregas vocais — causa pigarro, voz abafada e pode gerar inflamação.</div>
+        </div>
+        <div class="card">
+          <div class="card-icon" style="background:var(--teal-dim); color:var(--teal)">🔊</div>
+          <div class="card-title">Uso consciente da fala</div>
+          <div class="card-body">Evitar falar muito alto. Usar a voz na região da "máscara", reduzindo o peso e desgaste vocal — especialmente para quem trabalha em atividades que exigem muito uso da voz.</div>
+        </div>
+        <div class="card">
+          <div class="card-icon" style="background:var(--blue-dim); color:var(--blue)">🌙</div>
+          <div class="card-title">Sono & repouso vocal</div>
+          <div class="card-body">Dormir as horas necessárias. Após muitos dias cantando sem pausa, praticar repouso vocal. Isso garante saúde vocal e qualidade de execução nas performances.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ ENSAIO & ARRANJO ══ -->
+    <div id="sec-ensaio" class="section">
+      <div class="page-header">
+        <div class="eyebrow">Seção 2</div>
+        <h2>Ensaio & arranjo</h2>
+        <p>Pontos identificados e sugestões concretas para organização dos ensaios e estrutura do arranjo.</p>
+      </div>
+
+      <div class="section-label">Organização do grupo</div>
+      <div class="grid2">
+        <div class="card">
+          <div class="card-icon" style="background:var(--gold-dim); color:var(--gold2)">🎼</div>
+          <div class="card-title">Divisão por naipes</div>
+          <div class="card-body">Substituir "1ª, 2ª, 3ª voz" por soprano, contralto, tenor e barítono. Facilita a construção do arranjo, respeita a extensão vocal de cada cantor e permite trocas de linhas mais inteligentes.</div>
+          <div style="margin-top:10px">
+            <span class="tag tag-teal">Soprano</span>
+            <span class="tag tag-blue">Contralto</span>
+            <span class="tag tag-purple">Tenor</span>
+            <span class="tag tag-amber">Barítono</span>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-icon" style="background:var(--teal-dim); color:var(--teal)">📦</div>
+          <div class="card-title">Kit de ensaio</div>
+          <div class="card-body">Criar um kit antes dos ensaios com todas as vozes gravadas por naipe, do início ao fim da música. Basta piano-guia com tempo, forma e harmonia corretos. Cada cantor chega com a própria linha decorada.</div>
+          <div class="highlight" style="margin-top:12px">Resultado: ensaio dedicado a afinação, dinâmica e acabamentos — não a aprender a melodia do zero.</div>
+        </div>
+      </div>
+
+      <div class="section-label">Sugestões por trecho</div>
+
+      <div class="card" style="margin-bottom:12px">
+        <div class="card-icon" style="background:var(--blue-dim); color:var(--blue)">🎵</div>
+        <div class="card-title">Primeira estrofe — uníssono</div>
+        <div class="card-body">"Quando eu oro, tu falas pra mim..." — no uníssono, manter todos na mesma oitava dos tenores. Sopranos na oitava acima podem soar agressivas para o início da música.</div>
+        <div class="highlight">Na segunda repetição: abrir as vozes com melodia/base no tenor, ou sopranos na oitava acima com contraltos fazendo trocas quando possível — mais dinâmica e elementos surpresa no arranjo.</div>
+      </div>
+
+      <div class="card" style="margin-bottom:12px">
+        <div class="card-icon" style="background:var(--gold-dim); color:var(--gold2)">🔄</div>
+        <div class="card-title">Refrões — troca de melodia</div>
+        <div class="card-body">Atualmente a melodia principal está nos tenores. Sugestão: após a ministração do Gabriel, as vozes "dropam" e a melodia passa para as sopranos no refrão "Eu vou buscar".</div>
+        <div class="highlight">A emenda com a próxima música fica mais fluida — todos permanecem na mesma voz. O solo em "O que seria de mim" entra na mesma oitava, dando sensação de continuação com mais dinâmica.</div>
+      </div>
+
+      <div class="card">
+        <div class="card-icon" style="background:var(--rose-dim); color:var(--rose)">🎛️</div>
+        <div class="card-title">Equalização & timbragem</div>
+        <div class="card-body">Ajustar nos ensaios só com vocais, inclusive sem microfone. Dinorá apresentou dificuldade de timbrar com a Bruna, gerando desequilíbrio no naipe soprano. Todos os naipes devem alinhar dinâmicas, finalizações e acabamentos juntos.</div>
+      </div>
+    </div>
+
+    <!-- ══ GRAVAÇÃO ══ -->
+    <div id="sec-gravacao" class="section">
+      <div class="page-header">
+        <div class="eyebrow">Seção 3</div>
+        <h2>Gravação</h2>
+        <p>Recomendações técnicas para a próxima gravação, com base nos vídeos do Ministério Attos 2 como referência.</p>
+      </div>
+
+      <div class="tip-row">
+        <div class="tip-icon" style="background:var(--blue-dim); color:var(--blue)">🎛️</div>
+        <div class="tip-content">
+          <strong>Dobragem vocal</strong>
+          <span>Dobrar todas as vozes para preencher. No medley "O que seria de mim": adicionar um soprano acima (região mais aguda) e uma dobra grave masculina (oitava abaixo da melodia das sopranos). Os dois extremos — agudo e grave — somam corpo e peso ao coro.</span>
+        </div>
+      </div>
+
+      <div class="tip-row">
+        <div class="tip-icon" style="background:var(--teal-dim); color:var(--teal)">🎯</div>
+        <div class="tip-content">
+          <strong>Afinação na pós-produção</strong>
+          <span>No último lançamento as vozes não foram afinadas em pós. Gravar voz por voz permitiria afinar individualmente, encaixando muito melhor o resultado final. É mais trabalhoso e pode impactar no orçamento com o estúdio externo — fica como recomendação para as próximas produções.</span>
+          <div style="margin-top:8px"><span class="tag tag-amber">Alternativa imediata</span> <span style="font-size:13px; color:var(--text2)">Gravar voz por voz no estúdio próprio do grupo.</span></div>
+        </div>
+      </div>
+
+      <div class="tip-row">
+        <div class="tip-icon" style="background:var(--purple-dim); color:var(--purple)">🎤</div>
+        <div class="tip-content">
+          <strong>Segurança dos cantores</strong>
+          <span>O grupo está começando e alguns ainda não têm experiência de gravação ou apresentam dificuldades com afinação. Gravar individualmente dá mais segurança: ao ouvir a própria voz afinada, a confiança aumenta naturalmente.</span>
+        </div>
+      </div>
+
+      <div class="tip-row">
+        <div class="tip-icon" style="background:var(--gold-dim); color:var(--gold2)">📌</div>
+        <div class="tip-content">
+          <strong>Referência: Ministério Attos 2</strong>
+          <span>Observando os vídeos deles, a impressão é de overdubbing ou vozes pré-gravadas — é possível ouvir mais dobras e um som mais cheio do que a formação sugere. Além disso, o acabamento (afinação, dinâmica, timbragem) indica trabalho sólido de pré e pós-produção vocal.</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ CANTORES ══ -->
+    <div id="sec-cantores" class="section">
+      <div class="page-header">
+        <div class="eyebrow">Seção 4</div>
+        <h2>Cantores</h2>
+        <p>Análise individual de cada membro do vocal. Clique em um cantor para expandir.</p>
+      </div>
+
+      <!-- Bruna -->
+      <div class="singer-card" onclick="toggleCard(this)">
+        <div class="singer-header">
+          <div class="avatar" style="background:rgba(167,139,250,0.15); color:var(--purple); border-color:rgba(167,139,250,0.25)">BR</div>
+          <div class="singer-meta">
+            <div class="name">Bruna</div>
+            <div class="role">Soprano · Solista principal</div>
+          </div>
+          <div class="singer-tags">
+            <span class="tag tag-purple">Aguda</span>
+            <span class="tag tag-gold">Ornamentos</span>
+          </div>
+          <span class="chevron">▾</span>
+        </div>
+        <div class="singer-body">
+          <div class="singer-body-inner">
+            <p>Voz mais aguda do grupo, com muito punch, vibratos e ornamentos — características de solista. Apresenta alguma dificuldade em fazer linhas harmônicas que não sejam a melodia principal, mas é algo perfeitamente treinável (harmonia + timbragem com as demais vozes).</p>
+            <p>Dificuldade de projeção em regiões muito agudas: a voz plena parece não alcançar, soando mais "apertada". Treino de voz mista e belting ajudará tanto nos solos quanto nos vocais do grupo.</p>
+            <div class="tag-row">
+              <span class="tag tag-teal">Potencial de solo</span>
+              <span class="tag tag-blue">Treinar: voz mista</span>
+              <span class="tag tag-blue">Treinar: belting</span>
+              <span class="tag tag-amber">Ajustar: timbragem coral</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Raissa -->
+      <div class="singer-card" onclick="toggleCard(this)">
+        <div class="singer-header">
+          <div class="avatar" style="background:rgba(62,207,178,0.15); color:var(--teal); border-color:rgba(62,207,178,0.25)">RA</div>
+          <div class="singer-meta">
+            <div class="name">Raissa</div>
+            <div class="role">Soprano / Contralto · em desenvolvimento</div>
+          </div>
+          <div class="singer-tags">
+            <span class="tag tag-teal">Potência</span>
+            <span class="tag tag-amber">Afinação</span>
+          </div>
+          <span class="chevron">▾</span>
+        </div>
+        <div class="singer-body">
+          <div class="singer-body-inner">
+            <p>Timbre muito forte, volume e potência alinhados ao estilo do grupo. Atenção especial à afinação: quando está ao lado de alguém que desafina, perde a referência tonal. O kit de ensaio ajudará a criar âncoras mais sólidas.</p>
+            <p>Possui muitos médios, mas também agudos presentes em voz plena/de peito. Está ganhando controle da voz mista nas aulas. Cuidado para não colocá-la em regiões extremas — notas muito graves ou muito agudas causam esforço excessivo. Possui versatilidade para soprano e contralto dependendo da tonalidade. Potencial de solo sendo trabalhado nas aulas.</p>
+            <div class="tag-row">
+              <span class="tag tag-teal">Versátil: soprano & contralto</span>
+              <span class="tag tag-blue">Treinar: voz mista</span>
+              <span class="tag tag-amber">Evitar extremos de extensão</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Renan -->
+      <div class="singer-card" onclick="toggleCard(this)">
+        <div class="singer-header">
+          <div class="avatar" style="background:rgba(91,156,246,0.15); color:var(--blue); border-color:rgba(91,156,246,0.25)">RE</div>
+          <div class="singer-meta">
+            <div class="name">Renan</div>
+            <div class="role">Tenor · backing & potencial de solo</div>
+          </div>
+          <div class="singer-tags">
+            <span class="tag tag-blue">Melismas</span>
+            <span class="tag tag-purple">Pop</span>
+          </div>
+          <span class="chevron">▾</span>
+        </div>
+        <div class="singer-body">
+          <div class="singer-body-inner">
+            <p>Voz grave, mas com técnica para alcançar agudos — ainda não tão potentes e projetivos. Leveza natural para voz mista e falsete, aprimorável com técnica e ao ser desafiado a sair das regiões muito graves. Para o grupo é essencial um tenor abrindo as vozes em regiões mais agudas na harmonia.</p>
+            <p>Habilidoso em melismas e ornamentos, com característica pop e velocidade. Versatilidade para backing e solo. Recomendação: técnica de voz mista, belting, e direcionamento para colocar frases e ornamentos nos momentos e lugares certos.</p>
+            <div class="tag-row">
+              <span class="tag tag-teal">Versátil</span>
+              <span class="tag tag-blue">Treinar: voz mista</span>
+              <span class="tag tag-blue">Treinar: belting</span>
+              <span class="tag tag-purple">Potencial de solo</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Kamilly -->
+      <div class="singer-card" onclick="toggleCard(this)">
+        <div class="singer-header">
+          <div class="avatar" style="background:rgba(240,160,80,0.15); color:var(--amber); border-color:rgba(240,160,80,0.25)">KA</div>
+          <div class="singer-meta">
+            <div class="name">Kamilly</div>
+            <div class="role">Contralto · em desenvolvimento</div>
+          </div>
+          <div class="singer-tags">
+            <span class="tag tag-amber">Agudos a desenvolver</span>
+          </div>
+          <span class="chevron">▾</span>
+        </div>
+        <div class="singer-body">
+          <div class="singer-body-inner">
+            <p>Voz mais suave em relação ao estilo proposto. Apresentou dificuldade nos agudos no ensaio — chegou a afetar a afinação de Raissa, que estava ao lado. Parece ser insegurança e pouco domínio técnico, algo totalmente treinável.</p>
+            <p>Ponto de atenção: se as dificuldades nos agudos persistirem, pode ser necessário mantê-la em regiões mais graves, o que não seria ideal para ela nem para o time. A avaliação é de que ela tem potencial e que o nervosismo pode ter atrapalhado no ensaio.</p>
+            <div class="tag-row">
+              <span class="tag tag-amber">Focar: confiança</span>
+              <span class="tag tag-blue">Treinar: domínio técnico agudos</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Dinorá -->
+      <div class="singer-card" onclick="toggleCard(this)">
+        <div class="singer-header">
+          <div class="avatar" style="background:rgba(240,101,122,0.15); color:var(--rose); border-color:rgba(240,101,122,0.25)">DI</div>
+          <div class="singer-meta">
+            <div class="name">Dinorá</div>
+            <div class="role">Soprano · observada apenas no ensaio</div>
+          </div>
+          <div class="singer-tags">
+            <span class="tag tag-rose">Timbragem a ajustar</span>
+          </div>
+          <span class="chevron">▾</span>
+        </div>
+        <div class="singer-body">
+          <div class="singer-body-inner">
+            <p>Foi a voz com menor percepção individual no ensaio. Não conseguiu acompanhar a intensidade de Bruna, não timbrando com o restante do grupo. Afinação não pôde ser avaliada individualmente por falta de percepção isolada.</p>
+            <p>O grupo não precisa de vozes iguais, mas elas precisam se complementar. Uma voz aguda versátil (soprano e contralto) com agudo mais projetivo seria ideal para fechar e somar o time — especialmente no naipe soprano.</p>
+            <div class="tag-row">
+              <span class="tag tag-rose">Precisa: timbragem com o grupo</span>
+              <span class="tag tag-amber">Avaliar: afinação individual</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ SUGESTÕES GERAIS ══ -->
+    <div id="sec-sugestoes" class="section">
+      <div class="page-header">
+        <div class="eyebrow">Seção 5</div>
+        <h2>Sugestões gerais</h2>
+        <p>Pontos estratégicos para o desenvolvimento do grupo a médio prazo.</p>
+      </div>
+
+      <div class="tip-row">
+        <div class="tip-icon" style="background:var(--teal-dim); color:var(--teal)">➕</div>
+        <div class="tip-content">
+          <strong>Novo tenor</strong>
+          <span>Incluir mais uma voz masculina mais aguda (tenor) para complementar o Renan. Preencheria o coro com mais peso e equilíbrio no naipe masculino. João está na direção geral — precisa dividir atenção entre banda e vocal, o que pode fazê-lo parar de cantar em alguns momentos. Uma terceira voz masculina dedicada resolveria essa limitação.</span>
+        </div>
+      </div>
+
+      <div class="tip-row">
+        <div class="tip-icon" style="background:var(--gold-dim); color:var(--gold2)">🔀</div>
+        <div class="tip-content">
+          <strong>Flexibilidade entre naipes</strong>
+          <span>Treinar cantores para fazer linhas de outros naipes quando necessário — trocas de oitava, saltos de registro, cobertura de substituições. Referenciais: "Envolve-me" (Coral Resgate) e medley "Eu vou orar + O que seria de mim".</span>
+        </div>
+      </div>
+
+      <div class="tip-row">
+        <div class="tip-icon" style="background:var(--blue-dim); color:var(--blue)">🎵</div>
+        <div class="tip-content">
+          <strong>Revisão de tonalidade</strong>
+          <span>Se a maioria do grupo estiver com dificuldade para alcançar as notas propostas, avaliar uma tonalidade mais confortável antes de confirmar o arranjo. Todos os cantores precisam alcançar as notas, mas o conforto vocal é essencial para qualidade e saúde a longo prazo.</span>
+        </div>
+      </div>
+
+      <div class="tip-row">
+        <div class="tip-icon" style="background:var(--purple-dim); color:var(--purple)">⏱️</div>
+        <div class="tip-content">
+          <strong>Otimização do tempo de ensaio</strong>
+          <span>Com o kit pronto e as linhas pré-definidas, o tempo de ensaio fica inteiramente dedicado a afinar harmonia, dinâmicas e acabamentos coletivos — não a aprender a melodia do zero, o que é o maior consumidor de tempo atualmente.</span>
+        </div>
+      </div>
+
+      <div class="tip-row">
+        <div class="tip-icon" style="background:var(--teal-dim); color:var(--teal)">🎯</div>
+        <div class="tip-content">
+          <strong>Próximas produções</strong>
+          <span>Para gravações futuras, a recomendação ideal é gravar voz por voz para permitir afinação individual em pós-produção. A referência do Ministério Attos 2 indica que o nível de acabamento desejado exige trabalho de pré e pós-produção vocal além do que vem sendo feito.</span>
+        </div>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<script>
+function show(id, btn) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('sec-' + id).classList.add('active');
+  btn.classList.add('active');
+}
+function toggleCard(card) {
+  card.classList.toggle('open');
+}
+</script>
+</body>
+</html>
